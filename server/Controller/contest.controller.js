@@ -1,0 +1,352 @@
+import cron from "node-cron";
+
+// Model
+import User from "../Model/User.model.js";
+import Contest from "./../Model/Contest.model.js";
+import Ticket from "../Model/Ticket.model.js";
+
+// Utils
+import {
+  generateUniqueTicketNo,
+  getTicketById,
+  generateTicketsForContest,
+} from "../Utils/NumberManager.js";
+import { validateContestStatus } from "../Utils/StringManager.js";
+
+const totalCoinOnRefer = 20;
+const totalCoinsEqualsToTicket = 100;
+
+const updateContestStatus = async () => {
+  try {
+    const now = new Date();
+
+    // Find all contests that have started or ended
+    const contests = await Contest.find({
+      $or: [
+        { startDate: { $lte: now }, status: { $ne: "running" } }, // Contest should start or is running
+        { endDate: { $lte: now }, status: { $ne: "finished" } }, // Contest should end or is finished
+      ],
+    });
+
+    contests.forEach(async (contest) => {
+      if (contest.endDate <= now) {
+        contest.status = "finished";
+      } else if (contest.startDate <= now && contest.endDate > now) {
+        contest.status = "running";
+      } else if (contest.startDate > now) {
+        contest.status = "upcoming";
+      }
+
+      await contest.save();
+    });
+  } catch (error) {
+    console.error("Error updating contest statuses:", error);
+  }
+};
+
+cron.schedule("* * * * *", updateContestStatus);
+
+export const getAllContests = async (req, res) => {
+  try {
+    let allContests = await Contest.find();
+
+    if (!allContests) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Contests doesn't exist",
+      });
+    }
+
+    const contests = await Promise.all(
+      allContests.map(async (contest) => {
+        const allTickets = await Promise.all(
+          contest.participantTickets.map(async (ticketId) => {
+            return await getTicketById(ticketId);
+          })
+        );
+
+        return { ...contest.toObject(), allTickets };
+      })
+    );
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: "Contest retrieved successfully",
+      data: contests,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const getContest = async (req, res) => {
+  const { contest } = req;
+  try {
+    const allTickets = await Promise.all(
+      contest.participantTickets.map(async (ticketId) => {
+        return await getTicketById(ticketId);
+      })
+    );
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: "Contest retrieved successfully",
+      data: { ...contest.toObject(), allTickets },
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const getParticipatedContest = async (req, res) => {
+  const { user } = req;
+
+  try {
+    if (user.participatedContest.length === 0) {
+      // Success (if No participated contests)
+      return res.status(200).json({
+        status: "success",
+        message: "No participated contests found",
+        data: [],
+      });
+    }
+
+    const allParticipatedContest = await Promise.all(
+      user.participatedContest.map(async (contestId) => {
+        return await Contest.findById(contestId);
+      })
+    );
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: "Participated contests retrieved successfully",
+      data: allParticipatedContest,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+      error,
+    });
+  }
+};
+
+export const createContest = async (req, res) => {
+  const { title, entryFee, prize, startDate, endDate, ticketPrice } = req.body;
+
+  if (!title || !entryFee || !prize || !startDate || !endDate || !ticketPrice) {
+    return res.status(400).json({
+      status: "fail",
+      message: "All fields are required!",
+    });
+  }
+
+  try {
+    const contest = await Contest.create(req.body);
+
+    // Success
+    res.status(201).json({
+      status: "success",
+      message: "New Contest created successfully!",
+      data: contest,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const updateContest = async (req, res) => {
+  const { contest } = req;
+
+  try {
+    const updatedContest = await Contest.findByIdAndUpdate(
+      contest._id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    const allTickets = await Promise.all(
+      updatedContest.participantTickets.map(async (ticketId) => {
+        return await getTicketById(ticketId);
+      })
+    );
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: "Updated successfullys",
+      data: { ...updatedContest.toObject(), allTickets },
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const deleteContest = async (req, res) => {
+  const contest = req.contest;
+
+  try {
+    await contest.deleteOne();
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: "Deleted successfully",
+      data: null,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const participateContest = async (req, res) => {
+  const { user, contest } = req;
+  const { amount } = req.body;
+
+  if (amount < contest.entryFee) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Unsufficient Amount!",
+    });
+  }
+
+  const totalTickets = amount / contest.entryFee;
+
+  try {
+    validateContestStatus(contest);
+
+    // After Payment successful
+    const ticketIds = await generateTicketsForContest(
+      user,
+      contest,
+      totalTickets
+    );
+
+    contest.participantTickets.push(...ticketIds);
+    await contest.save();
+
+    if (!user.participatedContest.includes(contest._id)) {
+      user.participatedContest.push(contest._id);
+      await user.save();
+    }
+
+    const tickets = await Promise.all(
+      ticketIds.map(async (ticketId) => await getTicketById(ticketId))
+    );
+
+    // Reward Inviter for First Payment
+    if (!user.firstPaid) {
+      if (user.invitedBy) {
+        await User.findByIdAndUpdate(user.invitedBy, {
+          $inc: { coins: totalCoinOnRefer },
+        });
+
+        user.firstPaid = true;
+        await user.save();
+      }
+    }
+
+    // Success
+    res.status(200).json({
+      status: "success",
+      message: `Successfully Participated in the contest with ${totalTickets} ticket(s).`,
+      data: tickets,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
+
+export const exchangeCoins = async (req, res) => {
+  const { user, contest } = req;
+  const { coins } = req.body;
+
+  if (!coins) {
+    return res.status(400).json({
+      status: "fail",
+      message: "All fields are required!",
+    });
+  }
+
+  try {
+    if (coins > user.coins) {
+      return res.status(400).json({
+        status: "fail",
+        message: "You don't have enough coins!",
+      });
+    }
+    validateContestStatus(contest);
+
+    if (!user.participatedContest.includes(contest._id)) {
+      return res.status(401).json({
+        status: "fail",
+        message: "You haven't yet participated in this contest!",
+      });
+    }
+
+    const totalTickets = coins / totalCoinsEqualsToTicket;
+
+    // After Payment successful
+    const ticketIds = await generateTicketsForContest(
+      user,
+      contest,
+      totalTickets
+    );
+
+    // Cut the coins from User
+    user.coins -= coins;
+    await user.save();
+
+    // Add ticktes in Contest
+    contest.participantTickets.push(...ticketIds);
+    await contest.save();
+
+    const tickets = await Promise.all(
+      ticketIds.map(async (ticketId) => await getTicketById(ticketId))
+    );
+
+    // Suceess
+    res.status(200).json({
+      status: "success",
+      message: `Successfully exchanges ${coins} coins with ${totalTickets} ticket(s).`,
+      data: tickets,
+    });
+  } catch (error) {
+    // Error
+    res.status(500).json({
+      status: "fail",
+      message: error.message || "Internal server error!",
+    });
+  }
+};
