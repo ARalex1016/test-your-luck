@@ -14,7 +14,7 @@ export default {
         menuHeight: "var(--menuHeight)",
       },
       screens: {
-        mobilesm: "320px",
+        mobilesm: "0px",
         mobile: "480px",
       },
     },

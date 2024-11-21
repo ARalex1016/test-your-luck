@@ -102,17 +102,17 @@ const ContestCard = ({ contest }) => {
         </button>
 
         {/* Date Details */}
-        <div className="w-11/12 text-secondary border border-white rounded-md flex flex-row justify-around py-1 mt-4">
-          <div className="mobilesm:text-xs md:text-base">
+        <div className="w-11/12 text-secondary border border-white rounded-md flex flex-row flex-wrap justify-around gap-x-4 px-2 py-1 mt-4">
+          <div className="mobilesm:text-xs mobile:text-base">
             Starts on:{" "}
-            <span className="mobilesm:text-sm md:text-lg font-bold">
+            <span className="mobilesm:text-sm mobile:text-lg font-bold">
               {formatDate(contest.startDate)}
             </span>
           </div>
 
-          <div className="mobilesm:text-xs md:text-base">
+          <div className="mobilesm:text-xs mobile:text-base">
             Ends on:{" "}
-            <span className="mobilesm:text-sm md:text-lg font-bold">
+            <span className="mobilesm:text-sm mobile:text-lg font-bold">
               {formatDate(contest.endDate)}
             </span>
           </div>
