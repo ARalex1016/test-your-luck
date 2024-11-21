@@ -103,16 +103,16 @@ const ContestCard = ({ contest }) => {
 
         {/* Date Details */}
         <div className="w-11/12 text-secondary border border-white rounded-md flex flex-row justify-around py-1 mt-4">
-          <div>
+          <div className="mobilesm:text-xs md:text-base">
             Starts on:{" "}
-            <span className="text-lg font-bold">
+            <span className="mobilesm:text-sm md:text-lg font-bold">
               {formatDate(contest.startDate)}
             </span>
           </div>
 
-          <div>
+          <div className="mobilesm:text-xs md:text-base">
             Ends on:{" "}
-            <span className="text-lg font-bold">
+            <span className="mobilesm:text-sm md:text-lg font-bold">
               {formatDate(contest.endDate)}
             </span>
           </div>
