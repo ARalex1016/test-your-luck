@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 // Store
-import useStore from "../Store/useStore";
+import useStore from "../../Store/useStore";
 
 // Components
-import ContestCard from "./ContestCard/ContestCard";
+import ContestCard from "../ContestCard/ContestCard";
 
 const ParticipatedContest = () => {
   const { user, contest } = useStore();
