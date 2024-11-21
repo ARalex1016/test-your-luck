@@ -13,6 +13,10 @@ export default {
         paddingX: "var(--paddingX)",
         menuHeight: "var(--menuHeight)",
       },
+      screens: {
+        mobilesm: "320px",
+        mobile: "480px",
+      },
     },
   },
   plugins: [],

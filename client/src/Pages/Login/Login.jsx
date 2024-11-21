@@ -52,7 +52,7 @@ const Login = () => {
       // Server Response
       await login(userForm);
 
-      navigate("/dashboard");
+      navigate(`/dashboard`);
     } catch (error) {}
   };
 

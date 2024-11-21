@@ -67,6 +67,8 @@ const Header = () => {
       } else if (!isAuthenticated) {
         navigate("/signup");
       }
+
+      closeNav();
     } catch (error) {}
   };
 
@@ -129,34 +131,65 @@ const Header = () => {
               }}
             >
               <ul className="flex flex-col justify-between items-start gap-y-6">
-                <li>
-                  <Coins />
-                </li>
+                {/* Coins */}
+                {isAuthenticated && (
+                  <li>
+                    <Coins />
+                  </li>
+                )}
 
+                {/* Dashboard */}
+                {isAuthenticated && (
+                  <li
+                    onClick={() => navigate("/dashboard")}
+                    className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300"
+                  >
+                    Dashboard
+                  </li>
+                )}
+
+                {/* Contests */}
                 <li
-                  onClick={() => navigate("/dashboard")}
+                  onClick={() => navigate("/contest")}
                   className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300"
                 >
-                  Dashboard
-                </li>
-
-                <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
                   Contests
                 </li>
 
+                {/* Referral */}
+                {isAuthenticated && (
+                  <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
+                    Referral
+                  </li>
+                )}
+
+                {/* Profile */}
+                {isAuthenticated && (
+                  <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
+                    Profile
+                  </li>
+                )}
+
+                {/* About Us */}
                 <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                  Referral
+                  About Us
                 </li>
 
+                {/* Contact Us */}
                 <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                  Profile
+                  Contact Us
                 </li>
 
+                {/* Sign up || Log out Button */}
                 <li
                   onClick={handleClick}
-                  className="text-xl font-bold text-secondary text-center bg-red-600 rounded-md transition-all duration-300 px-4 py-1"
+                  className={`${
+                    isAuthenticated
+                      ? "text-xl"
+                      : "mobilesm:text-sm mobile:text-base"
+                  } font-bold text-secondary text-center bg-red-600 rounded-md transition-all duration-300 px-2 py-1`}
                 >
-                  {isAuthenticated ? "Logout" : "Sign up"}
+                  {isAuthenticated ? "Logout" : "Create new account"}
                 </li>
               </ul>
             </motion.nav>

@@ -107,6 +107,24 @@ const useStore = create((set) => ({
       set({ isLoading: false });
     }
   },
+
+  getAllContest: async () => {
+    set({ isLoading: true });
+
+    try {
+      const res = await axios.get(`${API_URL}${CONTEST_ROUTE}`);
+
+      //   Success
+      set({ contest: res.data.data, error: null });
+    } catch (error) {
+      set({
+        error: error.response.data.message,
+      });
+      throw Error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));
 
 export default useStore;

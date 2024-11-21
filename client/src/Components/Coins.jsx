@@ -1,4 +1,9 @@
+// Store
+import useStore from "../Store/useStore";
+
 const Coins = () => {
+  const { user } = useStore();
+
   const currency = "$";
   const value = 100;
 
@@ -8,7 +13,7 @@ const Coins = () => {
         Coins:{" "}
         <span className="font-extrabold">
           {currency}
-          {value}
+          {user.coins}
         </span>
       </p>
     </>

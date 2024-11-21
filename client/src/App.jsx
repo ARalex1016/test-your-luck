@@ -9,8 +9,10 @@ import Header from "./Components/Header/Header";
 
 // Pages
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
+import Contest from "./Pages/Contest/Contest";
 import NotFound from "./Pages/NotFound";
 
 const RedirectAuthenticateUser = ({ children }) => {
@@ -34,11 +36,21 @@ const ProtectRoute = ({ children }) => {
 };
 
 function App() {
-  const { checkAuth } = useStore();
+  const { user, checkAuth, getAllContest } = useStore();
+
+  // useEffect(() => {
+  //   checkAuth();
+  // }, [checkAuth]);
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    const fetchContests = async () => {
+      try {
+        await getAllContest();
+      } catch (error) {}
+    };
+
+    fetchContests();
+  }, [getAllContest]);
 
   return (
     <>
@@ -49,10 +61,15 @@ function App() {
           path="/dashboard"
           element={
             <ProtectRoute>
-              <Dashboard />
+              {user && user.role === "player" && <Dashboard />}
+              {user && (user.role === "admin" || user.role === "manager") && (
+                <AdminDashboard />
+              )}
             </ProtectRoute>
           }
         />
+
+        <Route path="/contest" element={<Contest />} />
 
         <Route
           path="/signup"
