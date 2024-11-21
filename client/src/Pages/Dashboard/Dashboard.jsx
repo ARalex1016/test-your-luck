@@ -1,6 +1,6 @@
 // Components
 import Banner from "../../Components/Banner/Banner";
-import ParticipatedContest from "../../Components/participatedContest";
+import ParticipatedContest from "../../Components/ParticipatedContest/ParticipatedContest";
 
 const Dashboard = () => {
   return (
