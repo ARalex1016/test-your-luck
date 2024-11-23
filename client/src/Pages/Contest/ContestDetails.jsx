@@ -12,11 +12,10 @@ import { getPercentage } from "../../Utils/numberManager.js";
 import { formatDate } from "../../Utils/dateManager.js";
 
 const ContestDetails = () => {
-  const { user, getContest, getTicketById } = useStore();
+  const { user, getContest } = useStore();
   const { contestId } = useParams();
 
   const [contest, setContest] = useState(null);
-  const [tickets, setTickets] = useState([]);
   const [myTickets, setMyTickets] = useState([]);
 
   // Get Contest
@@ -30,32 +29,15 @@ const ContestDetails = () => {
     };
 
     fetchContest(contestId);
-  }, [getContest]);
-
-  // Get Tickets
-  useEffect(() => {
-    const fetchTickets = async () => {
-      if (contest?.participantTickets?.length > 0) {
-        try {
-          const ticketResponses = await Promise.all(
-            contest.participantTickets.map((ticketId) =>
-              getTicketById(ticketId)
-            )
-          );
-
-          setTickets(ticketResponses);
-        } catch (error) {}
-      }
-    };
-
-    fetchTickets();
-  }, [contest, getTicketById]);
+  }, [contestId, getContest]);
 
   useEffect(() => {
-    if (user && tickets.length > 0) {
-      setMyTickets(tickets?.filter((ticket) => ticket.userId === user._id));
+    if (user && contest?.allTickets?.length > 0) {
+      setMyTickets(
+        contest?.allTickets?.filter((ticket) => ticket.userId === user._id)
+      );
     }
-  }, [tickets, user]);
+  }, [contest, user]);
 
   const participated = useMemo(() => {
     return user?.participatedContest.includes(contest?._id) || false;
@@ -202,7 +184,7 @@ const ContestDetails = () => {
                     width: "4ch",
                   }}
                 >
-                  {contest.participantTickets.length}
+                  {contest.allTickets.length}
                 </span>
               </p>
             </div>
@@ -217,7 +199,10 @@ const ContestDetails = () => {
                     textShadow: "0px 0px 10px hsl(0, 0%, 100%, .9)",
                   }}
                 >
-                  {`${getPercentage(myTickets.length, tickets.length)}%`}
+                  {`${getPercentage(
+                    myTickets.length,
+                    contest.allTickets.length
+                  )}%`}
                 </span>
               </p>
             )}
@@ -253,14 +238,14 @@ const ContestDetails = () => {
             {user && <hr className="col-span-2" />}
 
             {/* All tickets */}
-            {tickets.length > 0 && (
+            {contest.allTickets.length > 0 && (
               <div className="w-full col-span-2">
                 <p className="text-yellow-300 text-lg font-medium text-center">
                   All Tickets
                 </p>
 
                 <div className="w-full col-span-2 flex flex-row flex-wrap justify-center gap-x-1 gap-y-2 mt-2">
-                  {tickets?.map((ticket) => {
+                  {contest.allTickets?.map((ticket) => {
                     return (
                       <div
                         key={ticket._id}

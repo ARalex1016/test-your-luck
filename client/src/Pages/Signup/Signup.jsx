@@ -19,7 +19,7 @@ const Signup = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    invitedBy: null,
+    invitedBy: undefined,
   };
 
   const [userForm, setUserForm] = useState(initialUser);

@@ -3,6 +3,7 @@ import cron from "node-cron";
 // Model
 import User from "../Model/User.model.js";
 import Contest from "./../Model/Contest.model.js";
+import Ticket from "../Model/Ticket.model.js";
 
 // Utils
 import {
@@ -88,12 +89,7 @@ export const getContest = async (req, res) => {
   const { contest } = req;
 
   try {
-    // For Tickets
-    const allTickets = await Promise.all(
-      contest.participantTickets.map(async (ticketId) => {
-        return await getTicketByIdFunc(ticketId);
-      })
-    );
+    const allTickets = await Ticket.find({ contestId: contest._id });
 
     // Success
     res.status(200).json({

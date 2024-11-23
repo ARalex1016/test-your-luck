@@ -14,6 +14,7 @@ const ticketSchema = new mongoose.Schema(
     },
     ticketNo: {
       type: Number,
+      unique: true,
     },
     isBonus: {
       type: Boolean,
