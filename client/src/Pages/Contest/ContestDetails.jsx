@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -12,8 +12,9 @@ import { getPercentage } from "../../Utils/numberManager.js";
 import { formatDate } from "../../Utils/dateManager.js";
 
 const ContestDetails = () => {
-  const { user, getContest } = useStore();
+  const navigate = useNavigate();
   const { contestId } = useParams();
+  const { user, getContest } = useStore();
 
   const [contest, setContest] = useState(null);
   const [myTickets, setMyTickets] = useState([]);
@@ -48,7 +49,7 @@ const ContestDetails = () => {
   return (
     <>
       {contest && (
-        <section className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-4 pb-8">
+        <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-4 pb-8">
           {/* Timer */}
           <div
             className={`w-screen px-2 z-10 flex flex-col justify-center items-center
@@ -87,7 +88,7 @@ const ContestDetails = () => {
           />
 
           {/* Title */}
-          <h2 className="text-greenTransparent text-2xl font-bold">
+          <h2 className="w-full text-greenTransparent text-xl text-center font-bold">
             {contest.title}
           </h2>
 
@@ -110,7 +111,10 @@ const ContestDetails = () => {
 
           {/* Buuton to Participate */}
           {contest.status === "running" && (
-            <button className="w-2/3 text-2xl text-white font-bold bg-accent rounded-md py-1">
+            <button
+              onClick={() => navigate(`/contest/${contestId}/participate`)}
+              className="w-2/3 text-2xl text-white font-bold bg-accent rounded-md py-1"
+            >
               {participated ? "Buy More Tickets" : "Participate"}
             </button>
           )}
@@ -214,7 +218,7 @@ const ContestDetails = () => {
                   Your Tickets
                 </p>
 
-                <div className="w-full col-span-2 flex flex-row flex-wrap justify-center px-6 gap-4 mt-2">
+                <div className="w-full col-span-2 flex flex-row flex-wrap justify-center px-2 gap-4 mt-2">
                   {myTickets.map((ticket) => {
                     return (
                       <div
@@ -244,7 +248,7 @@ const ContestDetails = () => {
                   All Tickets
                 </p>
 
-                <div className="w-full col-span-2 flex flex-row flex-wrap justify-center gap-x-1 gap-y-2 mt-2">
+                <div className="w-full col-span-2 flex flex-row flex-wrap justify-center gap-x-1 gap-y-2 px-2 mt-2">
                   {contest.allTickets?.map((ticket) => {
                     return (
                       <div
@@ -281,7 +285,7 @@ const ContestDetails = () => {
               details of the Contest
             </p>
           )}
-        </section>
+        </main>
       )}
     </>
   );

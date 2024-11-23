@@ -11,20 +11,22 @@ export const validatePassword = (password) => {
   return isValidLength && hasUpperCase && hasLowerCase && hasNumber;
 };
 
-export const validateContestStatus = (contest) => {
+export const validateContestStatus = (contest, res) => {
   if (contest.status === "upcoming") {
-    return res.status(400).json({
+    res.status(400).json({
       status: "fail",
       message: "Contest isn't started yet!",
     });
+    return false;
   }
 
   if (contest.status === "finished") {
-    return res.status(400).json({
+    res.status(400).json({
       status: "fail",
       message: "Contest already over!",
     });
+    return false;
   }
 
-  return;
+  return true;
 };

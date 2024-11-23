@@ -80,9 +80,9 @@ const ContestCard = ({ contest }) => {
         </div>
 
         {/* Title */}
-        <p className="text-yellow-400 text-2xl font-bold text-nowrap">
+        <h2 className="w-full text-yellow-400 text-center text-xl font-bold text-nowrap">
           {contest.title}
-        </p>
+        </h2>
 
         {/* Entry fee */}
         {contest.status !== "finished" && (

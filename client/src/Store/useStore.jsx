@@ -146,6 +146,18 @@ const useStore = create((set) => ({
       throw Error(error.response.data.message);
     }
   },
+
+  participateContest: async () => {
+    try {
+      const res = await axios.get(
+        `${API_URL}${CONTEST_ROUTE}${contestId}/participate`
+      );
+
+      return res.data.data;
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
+  },
 }));
 
 export default useStore;

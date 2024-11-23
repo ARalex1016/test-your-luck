@@ -21,6 +21,7 @@ import Login from "./Pages/Login/Login";
 import Contest from "./Pages/Contest/Contest";
 import ContestDetails from "./Pages/Contest/ContestDetails";
 import Refferral from "./Pages/Referral/Refferral";
+import Participate from "./Pages/Participate/Participate";
 import NotFound from "./Pages/NotFound";
 
 const RedirectAuthenticateUser = ({ children }) => {
@@ -92,6 +93,10 @@ function App() {
           {
             path: "contest/:contestId",
             element: <ContestDetails />,
+          },
+          {
+            path: "contest/:contestId/participate",
+            element: <Participate />,
           },
           {
             path: "/referral",

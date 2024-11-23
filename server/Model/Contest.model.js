@@ -13,6 +13,10 @@ const contestSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    coinEntryFee: {
+      type: Number,
+      required: true,
+    },
     prize: {
       type: String,
       required: true,

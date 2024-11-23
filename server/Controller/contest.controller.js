@@ -6,14 +6,10 @@ import Contest from "./../Model/Contest.model.js";
 import Ticket from "../Model/Ticket.model.js";
 
 // Utils
-import {
-  getTicketByIdFunc,
-  generateTicketsForContest,
-} from "../Utils/NumberManager.js";
+import { generateTicketsForContest } from "../Utils/NumberManager.js";
 import { validateContestStatus } from "../Utils/StringManager.js";
 
 const totalCoinOnRefer = 20;
-const totalCoinsEqualsToTicket = 100;
 
 const updateContestStatus = async () => {
   try {
@@ -247,33 +243,32 @@ export const participateContest = async (req, res) => {
   if (amount < contest.entryFee) {
     return res.status(400).json({
       status: "fail",
-      message: "Unsufficient Amount!",
+      message: "Insufficient Amount!",
     });
   }
 
   const totalTickets = amount / contest.entryFee;
 
   try {
-    validateContestStatus(contest);
+    if (!validateContestStatus(contest, res)) return;
 
     // After Payment successful
-    const ticketIds = await generateTicketsForContest(
-      user,
-      contest,
+
+    // Generate Tickets
+    const tickets = await generateTicketsForContest(
+      user._id,
+      contest._id,
       totalTickets
     );
 
-    contest.participantTickets.push(...ticketIds);
+    contest.participantTickets.push(...tickets.map((ticket) => ticket._id));
     await contest.save();
 
+    // Push in User participated List
     if (!user.participatedContest.includes(contest._id)) {
       user.participatedContest.push(contest._id);
       await user.save();
     }
-
-    const tickets = await Promise.all(
-      ticketIds.map(async (ticketId) => await getTicketById(ticketId))
-    );
 
     // Reward Inviter for First Payment
     if (!user.firstPaid) {
@@ -290,7 +285,7 @@ export const participateContest = async (req, res) => {
     // Success
     res.status(200).json({
       status: "success",
-      message: `Successfully Participated in the contest with ${totalTickets} ticket(s).`,
+      message: `Successfully Participated in the contest with ${tickets.length} ticket(s).`,
       data: tickets,
     });
   } catch (error) {
@@ -320,6 +315,7 @@ export const exchangeCoins = async (req, res) => {
         message: "You don't have enough coins!",
       });
     }
+
     validateContestStatus(contest);
 
     if (!user.participatedContest.includes(contest._id)) {
@@ -329,12 +325,13 @@ export const exchangeCoins = async (req, res) => {
       });
     }
 
-    const totalTickets = coins / totalCoinsEqualsToTicket;
+    const totalTickets =
+      (contest.coinEntryFee !== 0 && coins / contest.coinEntryFee) || 0;
 
     // After Payment successful
-    const ticketIds = await generateTicketsForContest(
-      user,
-      contest,
+    const tickets = await generateTicketsForContest(
+      user._id,
+      contest._id,
       totalTickets
     );
 
@@ -343,17 +340,13 @@ export const exchangeCoins = async (req, res) => {
     await user.save();
 
     // Add ticktes in Contest
-    contest.participantTickets.push(...ticketIds);
+    contest.participantTickets.push(...tickets.map((ticket) => ticket._id));
     await contest.save();
-
-    const tickets = await Promise.all(
-      ticketIds.map(async (ticketId) => await getTicketById(ticketId))
-    );
 
     // Suceess
     res.status(200).json({
       status: "success",
-      message: `Successfully exchanges ${coins} coins with ${totalTickets} ticket(s).`,
+      message: `Successfully exchanged ${coins} coins with ${totalTickets} ticket(s).`,
       data: tickets,
     });
   } catch (error) {

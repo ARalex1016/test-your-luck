@@ -3,13 +3,13 @@ import crypto from "crypto";
 // Model
 import Ticket from "../Model/Ticket.model.js";
 
-export const generateUniqueTicketNo = async () => {
+const generateUniqueTicketNo = async () => {
   let isUnique = false;
   let ticketNo;
 
   while (!isUnique) {
     // Generate a random 4-digit number (0000 to 9999)
-    ticketNo = crypto.randomInt(0, 10000).toString().padStart(4, "0");
+    ticketNo = crypto.randomInt(1000, 10000);
 
     // Check if the ticket already exists in the database
     const existingTicket = await Ticket.findOne({ ticketNo });
@@ -21,30 +21,30 @@ export const generateUniqueTicketNo = async () => {
   return ticketNo;
 };
 
-export const getTicketByIdFunc = async (ticketId) => {
-  const ticket = await Ticket.findById(ticketId);
-
-  return ticket ? ticket.ticketNo : null;
-};
-
 export const generateTicketsForContest = async (
-  user,
-  contest,
+  userId,
+  contestId,
   totalTickets
 ) => {
-  const ticketIds = [];
+  const tickets = [];
 
   for (let i = 0; i < totalTickets; i++) {
     const ticketNo = await generateUniqueTicketNo();
 
     const ticket = await Ticket.create({
-      contestId: contest._id,
-      userId: user._id,
+      contestId,
+      userId,
       ticketNo,
     });
 
-    ticketIds.push(ticket._id);
+    tickets.push(ticket);
   }
 
-  return ticketIds;
+  return tickets;
+};
+
+export const getTicketByIdFunc = async (ticketId) => {
+  const ticket = await Ticket.findById(ticketId);
+
+  return ticket ? ticket.ticketNo : null;
 };
