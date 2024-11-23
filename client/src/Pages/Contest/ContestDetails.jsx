@@ -159,10 +159,10 @@ const ContestDetails = () => {
             </h2>
 
             {/* Tickets Count */}
-            <div className="flex flex-row justify-around">
+            <div className="flex flex-row justify-around gap-x-2">
               {/* Your Ticket Count */}
               {user && (
-                <p className="text-white text-base text-center">
+                <p className="text-white text-sm text-center px-2">
                   Your Tickects :{" "}
                   <span
                     className="text-green text-xl text-left font-bold inline-block"
@@ -176,7 +176,7 @@ const ContestDetails = () => {
               )}
 
               {/* Total Ticket Sold Count */}
-              <p className="text-white text-base text-center">
+              <p className="text-white text-sm text-center px-2">
                 Tickets Sold :{" "}
                 <span
                   className="text-green text-xl text-left font-bold inline-block"
@@ -219,7 +219,7 @@ const ContestDetails = () => {
                     return (
                       <div
                         key={ticket._id}
-                        className="text-secondary text-lg font-medium bg-greenTransparent rounded shadow-sm shadow-greenTransparent px-3 py-1"
+                        className="text-secondary text-base font-medium bg-greenTransparent rounded shadow-sm shadow-greenTransparent px-2 py-1"
                       >
                         {ticket.ticketNo}
                       </div>
@@ -249,7 +249,7 @@ const ContestDetails = () => {
                     return (
                       <div
                         key={ticket._id}
-                        className={`text-red-500 text-xs font-medium bg-secondaryDim rounded shadow-sm shadow-secondaryDim px-1  ${
+                        className={`text-red-500 text-xs font-medium bg-secondaryDim rounded shadow-sm shadow-secondaryDim p-1  ${
                           participated &&
                           ticket.userId === user._id &&
                           " shadow-greenTransparent"
