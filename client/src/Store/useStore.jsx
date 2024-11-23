@@ -147,10 +147,11 @@ const useStore = create((set) => ({
     }
   },
 
-  participateContest: async () => {
+  participateContest: async (amount, contestId) => {
     try {
-      const res = await axios.get(
-        `${API_URL}${CONTEST_ROUTE}${contestId}/participate`
+      const res = await axios.post(
+        `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
+        amount
       );
 
       return res.data.data;

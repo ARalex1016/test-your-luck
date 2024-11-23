@@ -14,7 +14,7 @@ import { formatDate } from "../../Utils/dateManager.js";
 const ContestDetails = () => {
   const navigate = useNavigate();
   const { contestId } = useParams();
-  const { user, getContest } = useStore();
+  const { user, getContest, participateContest } = useStore();
 
   const [contest, setContest] = useState(null);
   const [myTickets, setMyTickets] = useState([]);
@@ -109,7 +109,7 @@ const ContestDetails = () => {
             </span>
           </p>
 
-          {/* Buuton to Participate */}
+          {/* Buton to Participate */}
           {contest.status === "running" && (
             <button
               onClick={() => navigate(`/contest/${contestId}/participate`)}

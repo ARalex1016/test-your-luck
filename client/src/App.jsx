@@ -47,9 +47,9 @@ const ProtectRoute = ({ children }) => {
 function App() {
   const { user, checkAuth, getAllContest } = useStore();
 
-  // useEffect(() => {
-  //   checkAuth();
-  // }, [checkAuth]);
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   useEffect(() => {
     const fetchContests = async () => {

@@ -24,6 +24,12 @@
   --menuHeight: 60px;
 }
 
+input[type="number"] {
+  -moz-appearance: textfield; /* For Firefox */
+  -webkit-appearance: none; /* For Chrome, Safari, and newer Edge */
+  appearance: textfield; /* Modern standard */
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
