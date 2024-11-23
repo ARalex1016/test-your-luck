@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 // Route
 import authRouter from "./Route/auth.route.js";
 import contestRouter from "./Route/contest.route.js";
+import ticketRouter from "./Route/ticket.route.js";
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use(cors({ origin: Client_Url, credentials: true }));
 
 app.use("/api/v1/user/", authRouter);
 app.use("/api/v1/contest/", contestRouter);
+app.use("/api/v1/ticket/", ticketRouter);
 
 export default app;

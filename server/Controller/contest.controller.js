@@ -3,12 +3,10 @@ import cron from "node-cron";
 // Model
 import User from "../Model/User.model.js";
 import Contest from "./../Model/Contest.model.js";
-import Ticket from "../Model/Ticket.model.js";
 
 // Utils
 import {
-  generateUniqueTicketNo,
-  getTicketById,
+  getTicketByIdFunc,
   generateTicketsForContest,
 } from "../Utils/NumberManager.js";
 import { validateContestStatus } from "../Utils/StringManager.js";
@@ -57,23 +55,25 @@ export const getAllContests = async (req, res) => {
       });
     }
 
-    const contests = await Promise.all(
-      allContests.map(async (contest) => {
-        const allTickets = await Promise.all(
-          contest.participantTickets.map(async (ticketId) => {
-            return await getTicketById(ticketId);
-          })
-        );
+    // ----For tickets for all contest,---- (but not neccssary, I guess for now, maybe future)
 
-        return { ...contest.toObject(), allTickets };
-      })
-    );
+    // const contests = await Promise.all(
+    //   allContests.map(async (contest) => {
+    //     const allTickets = await Promise.all(
+    //       contest.participantTickets.map(async (ticketId) => {
+    //         return await getTicketById(ticketId);
+    //       })
+    //     );
+
+    //     return { ...contest.toObject(), allTickets };
+    //   })
+    // );
 
     // Success
     res.status(200).json({
       status: "success",
       message: "Contest retrieved successfully",
-      data: contests,
+      data: allContests,
     });
   } catch (error) {
     // Error
@@ -86,10 +86,12 @@ export const getAllContests = async (req, res) => {
 
 export const getContest = async (req, res) => {
   const { contest } = req;
+
   try {
+    // For Tickets
     const allTickets = await Promise.all(
       contest.participantTickets.map(async (ticketId) => {
-        return await getTicketById(ticketId);
+        return await getTicketByIdFunc(ticketId);
       })
     );
 
@@ -222,6 +224,22 @@ export const deleteContest = async (req, res) => {
     res.status(500).json({
       status: "fail",
       message: error.message || "Internal server error!",
+    });
+  }
+};
+
+// Tickets
+export const getTicketById = async (req, res) => {
+  try {
+    res.status(200).json({
+      status: "success",
+      data: req.ticket,
+      message: "Ticket retrieved Successfully!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: "Internal server error",
     });
   }
 };

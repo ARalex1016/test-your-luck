@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 // Store
 import useStore from "../../Store/useStore";
 
@@ -17,14 +19,18 @@ const Contest = () => {
 
   return (
     <>
-      <main className="w-full mt-menuHeight px-paddingX">
+      <main className="w-full mt-menuHeight px-paddingX pb-10">
         {/* Running Contest */}
 
         <h2 className="text-xl text-white font-bold mb-4">Running Contest</h2>
 
         {runningContests.length > 0 ? (
           runningContests.map((contest) => {
-            return <ContestCard key={contest._id} contest={contest} />;
+            return (
+              <Link to={contest._id} key={contest._id}>
+                <ContestCard contest={contest} />
+              </Link>
+            );
           })
         ) : (
           <p className="text-red-500 text-lg font-semibold">
@@ -42,7 +48,11 @@ const Contest = () => {
 
         {upcomingContests.length > 0 ? (
           upcomingContests.map((contest) => {
-            return <ContestCard key={contest._id} contest={contest} />;
+            return (
+              <Link to={contest._id} key={contest._id}>
+                <ContestCard contest={contest} />
+              </Link>
+            );
           })
         ) : (
           <p className="text-red-500 text-lg font-semibold">

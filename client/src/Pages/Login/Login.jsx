@@ -93,12 +93,12 @@ const Login = () => {
               onChange={handleInputChange}
             />
 
-            <button className="w-full text-2xl text-secondary font-medium bg-accent rounded-md cursor-pointer py-1 mt-6">
+            <button className="w-full text-2xl text-secondary font-medium bg-accent rounded-md cursor-pointer py-1 mt-4">
               Login
             </button>
           </form>
 
-          <p className="text-secondary">
+          <p className="text-secondary text-sm">
             Don't have account?{" "}
             <span
               onClick={() => navigate("/signup")}

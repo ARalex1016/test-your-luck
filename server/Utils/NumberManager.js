@@ -21,7 +21,7 @@ export const generateUniqueTicketNo = async () => {
   return ticketNo;
 };
 
-export const getTicketById = async (ticketId) => {
+export const getTicketByIdFunc = async (ticketId) => {
   const ticket = await Ticket.findById(ticketId);
 
   return ticket ? ticket.ticketNo : null;

@@ -15,7 +15,6 @@ import {
 
 // Middleware
 import { contestParam } from "../Middleware/param.middleware.js";
-import User from "../Model/User.model.js";
 
 const router = express.Router();
 

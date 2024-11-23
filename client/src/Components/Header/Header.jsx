@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -15,6 +15,7 @@ import { IoMdClose } from "react-icons/io";
 const Header = () => {
   const { isAuthenticated, logout } = useStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -27,6 +28,11 @@ const Header = () => {
   const closeNav = () => {
     setIsNavOpen(false);
   };
+
+  // Automatically close the navbar when the route changes
+  useEffect(() => {
+    closeNav();
+  }, [location.pathname]); // Runs whenever the route changes
 
   // Close navbar on outside click
   useEffect(() => {
@@ -64,6 +70,8 @@ const Header = () => {
     try {
       if (isAuthenticated) {
         await logout();
+
+        navigate("/login");
       } else if (!isAuthenticated) {
         navigate("/signup");
       }
@@ -119,7 +127,7 @@ const Header = () => {
               animate="final"
               exit="initial"
               transition={{
-                duration: 0.5,
+                duration: 0.3,
                 ease: "easeIn",
               }}
               className="w-1/2 rounded-lg flex justify-start overflow-hidden md:hidden absolute right-paddingX z-50 p-6"
@@ -140,45 +148,81 @@ const Header = () => {
 
                 {/* Dashboard */}
                 {isAuthenticated && (
-                  <li
-                    onClick={() => navigate("/dashboard")}
-                    className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300"
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                      `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                        isActive ? "text-accent" : "text-secondary"
+                      }`
+                    }
                   >
-                    Dashboard
-                  </li>
+                    <li>Dashboard</li>
+                  </NavLink>
                 )}
 
                 {/* Contests */}
-                <li
-                  onClick={() => navigate("/contest")}
-                  className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300"
+                <NavLink
+                  to="/contest"
+                  className={({ isActive }) =>
+                    `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                      isActive ? "text-accent" : "text-secondary"
+                    }`
+                  }
                 >
-                  Contests
-                </li>
+                  <li>Contest</li>
+                </NavLink>
 
                 {/* Referral */}
                 {isAuthenticated && (
-                  <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                    Referral
-                  </li>
+                  <NavLink
+                    to="/referral"
+                    className={({ isActive }) =>
+                      `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                        isActive ? "text-accent" : "text-secondary"
+                      }`
+                    }
+                  >
+                    <li>Referral</li>
+                  </NavLink>
                 )}
 
                 {/* Profile */}
                 {isAuthenticated && (
-                  <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                    Profile
-                  </li>
+                  <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                      `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                        isActive ? "text-accent" : "text-secondary"
+                      }`
+                    }
+                  >
+                    <li>Profile</li>
+                  </NavLink>
                 )}
 
                 {/* About Us */}
-                <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                  About Us
-                </li>
+                <NavLink
+                  to="/about-us"
+                  className={({ isActive }) =>
+                    `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                      isActive ? "text-accent" : "text-secondary"
+                    }`
+                  }
+                >
+                  <li>About Us</li>
+                </NavLink>
 
                 {/* Contact Us */}
-                <li className="text-xl font-medium text-secondary hover:text-accent transition-all duration-300">
-                  Contact Us
-                </li>
+                <NavLink
+                  to="/contact"
+                  className={({ isActive }) =>
+                    `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                      isActive ? "text-accent" : "text-secondary"
+                    }`
+                  }
+                >
+                  <li>Contact</li>
+                </NavLink>
 
                 {/* Sign up || Log out Button */}
                 <li

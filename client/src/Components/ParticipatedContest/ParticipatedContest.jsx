@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -23,7 +24,11 @@ const ParticipatedContest = () => {
         <section className="flex flex-col gap-y-10">
           {user.participatedContest.length > 0 ? (
             participatedContest.map((contest) => {
-              return <ContestCard key={contest._id} contest={contest} />;
+              return (
+                <Link key={contest._id} to={`/contest/${contest._id}`}>
+                  <ContestCard contest={contest} />
+                </Link>
+              );
             })
           ) : (
             <div>

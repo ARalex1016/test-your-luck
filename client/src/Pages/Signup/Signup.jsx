@@ -102,13 +102,24 @@ const Signup = () => {
   return (
     <>
       <main
-        className="px-paddingX mt-menuHeight flex justify-center items-center"
+        className="px-paddingX mt-menuHeight flex flex-col justify-center items-center"
         style={{
           height: "calc(100svh - var(--menuHeight))",
         }}
       >
+        {/* Label for Valid Information */}
+        <div className="w-screen bg-yellow-400 absolute top-menuHeight z-10">
+          <p className="text-primary text-sm text-center">
+            <b>Note:</b> Please give valid informaton
+          </p>
+          <p className="text-primary text-sm text-center">
+            These information will help us to <b>Contact</b> you on your{" "}
+            <b>Winnings</b>
+          </p>
+        </div>
+
         {/* Container */}
-        <div className="w-full bg-primaryLight rounded-2xl flex flex-col items-center py-6 gap-y-1">
+        <div className="w-full bg-primaryLight rounded-2xl flex flex-col items-center py-3 gap-y-1">
           <h2 className="text-accent text-3xl font-bold text-center">
             Sign Up
           </h2>
@@ -121,8 +132,8 @@ const Signup = () => {
             {message}
           </p>
 
-          <form onSubmit={handleSubmit} className="w-4/5 flex flex-col gap-y-6">
-            <div className="w-full flex gap-x-6">
+          <form onSubmit={handleSubmit} className="w-4/5 flex flex-col gap-y-4">
+            <div className="w-full flex gap-x-2">
               <Input
                 type="text"
                 placeholder="Name"
@@ -148,6 +159,7 @@ const Signup = () => {
                   border: "none",
                   color: "#666666",
                   fontWeight: "500",
+                  fontSize: "12px",
                 }}
                 containerStyle={{
                   border: "none",
@@ -209,7 +221,7 @@ const Signup = () => {
             </button>
           </form>
 
-          <p className="text-secondary">
+          <p className="text-secondary text-sm">
             Already have an account?{" "}
             <span
               onClick={() => navigate("/login")}

@@ -20,7 +20,7 @@ const Input = ({
         value={value}
         name={name}
         onChange={(e) => handleChange(e)}
-        className={`w-full p-2 outline-none rounded-sm ${className}`}
+        className={`w-full text-sm px-2 py-1 outline-none rounded-lg ${className}`}
       />
     </>
   );

@@ -10,6 +10,7 @@ const API_URL =
 // Routes
 const USER_ROUTE = import.meta.env.VITE_SERVER_USER_ROUTE;
 const CONTEST_ROUTE = import.meta.env.VITE_SERVER_CONTEST_ROUTE;
+const TICKET_ROUTE = import.meta.env.VITE_SERVER_TICKET_ROUTE;
 
 axios.defaults.withCredentials = true;
 
@@ -123,6 +124,26 @@ const useStore = create((set) => ({
       throw Error;
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  getContest: async (contestId) => {
+    try {
+      const res = await axios.get(`${API_URL}${CONTEST_ROUTE}${contestId}`);
+
+      return res.data.data;
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
+  },
+
+  getTicketById: async (ticketId) => {
+    try {
+      const res = await axios.get(`${API_URL}${TICKET_ROUTE}${ticketId}`);
+
+      return res.data.data;
+    } catch (error) {
+      throw Error(error.response.data.message);
     }
   },
 }));
