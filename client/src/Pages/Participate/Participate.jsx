@@ -60,8 +60,10 @@ const Participate = () => {
       const res = await participateContest(totalAmount, contestId);
 
       console.log(res);
+      alert(res);
     } catch (error) {
       console.log(error);
+      alert(error);
     }
   };
 
