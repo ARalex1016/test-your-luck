@@ -59,7 +59,7 @@ const Participate = () => {
   const handlePayment = async () => {
     try {
       const res = await participateContest(totalAmount, contestId);
-      toast.success(res);
+      console.log(res);
     } catch (error) {
       toast.error(error.message);
     }

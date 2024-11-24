@@ -31,7 +31,7 @@ const useStore = create((set) => ({
 
       //   Success
       set({ user: res.data.data, isAuthenticated: true, error: null });
-      return res.data.message;
+      return res;
     } catch (error) {
       // Error
       set({
