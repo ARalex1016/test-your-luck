@@ -239,6 +239,7 @@ export const getTicketById = async (req, res) => {
 export const participateContest = async (req, res) => {
   const { user, contest } = req;
   const { amount } = req.body;
+  console.log(1);
 
   if (!amount) {
     return res.status(400).json({

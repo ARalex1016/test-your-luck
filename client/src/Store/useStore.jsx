@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+console.log(import.meta.env.VITE_NODE_ENV);
+
 // Urls
 const API_URL =
   import.meta.env.VITE_NODE_ENV === "production"
