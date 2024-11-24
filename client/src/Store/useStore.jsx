@@ -152,11 +152,10 @@ const useStore = create((set) => ({
     try {
       const res = await axios.post(
         `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
-        { amount },
-        { withCredentials: true }
+        { amount }
       );
 
-      return res.data.data;
+      return res.data.message;
     } catch (error) {
       throw Error(error.response.data.message);
     }
