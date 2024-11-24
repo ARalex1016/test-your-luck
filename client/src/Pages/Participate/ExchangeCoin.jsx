@@ -8,15 +8,16 @@ import useStore from "../../Store/useStore";
 // Icons
 import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
-import { Euro } from "lucide-react";
+import { Equal } from "lucide-react";
 
-const Participate = () => {
+const ExchangeCoin = () => {
   const { contestId } = useParams();
-  const { isAuthenticated, getContest, participateContest } = useStore();
+  const { user, isAuthenticated, getContest, exchangeCoin } = useStore();
 
   const [contest, setContest] = useState(null);
+  const [requiredCoins, setRequiredCoins] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [totalAmount, setTotalAmount] = useState(null);
+  const [canExchange, setCanExchange] = useState(false);
 
   useEffect(() => {
     const fetchContest = async (contestId) => {
@@ -32,9 +33,24 @@ const Participate = () => {
 
   useEffect(() => {
     if (contest) {
-      setTotalAmount(quantity * contest?.entryFee);
+      setRequiredCoins(quantity * contest?.coinEntryFee);
     }
   }, [quantity, contest]);
+
+  useEffect(() => {
+    if (user) {
+      if (quantity === 0) {
+        setCanExchange(false);
+      } else {
+        if (requiredCoins > user?.coins) {
+          setCanExchange(false);
+        }
+        if (requiredCoins <= user?.coins) {
+          setCanExchange(true);
+        }
+      }
+    }
+  }, [requiredCoins, user]);
 
   const handleInputChnage = (e) => {
     const value = Number(e.target.value);
@@ -56,7 +72,7 @@ const Participate = () => {
     });
   };
 
-  const handlePayment = async () => {
+  const handleExchange = async () => {
     if (!isAuthenticated) {
       return toast.error(
         "Please Sign Up first in order to Participate in a Contest"
@@ -64,7 +80,7 @@ const Participate = () => {
     }
 
     try {
-      const res = await participateContest(totalAmount, contestId);
+      const res = await exchangeCoin(requiredCoins, contestId);
       toast.success(res);
     } catch (error) {
       toast.error(error.message);
@@ -74,7 +90,7 @@ const Participate = () => {
   return (
     <>
       {contest && (
-        <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-2 pb-8">
+        <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-3 pb-8">
           {/* Image */}
           <img
             src={contest.imageUrl}
@@ -86,6 +102,52 @@ const Participate = () => {
           <h2 className="w-full text-greenTransparent text-xl text-center font-bold">
             {contest.title}
           </h2>
+
+          {/* Ticket Price Display */}
+          <div className="w-full flex flex-row justify-around mb-4">
+            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+              <b>1</b> Ticket
+            </p>
+            <Equal className="text-secondaryDim" />
+            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+              <b>{contest?.coinEntryFee}</b> Coin(s)
+            </p>
+          </div>
+
+          {/* Message */}
+          <p
+            className={`w-full text-xs text-center  ${
+              canExchange
+                ? "text-secondaryDim bg-greenTransparent"
+                : "text-secondaryDim bg-red-600"
+            }`}
+          >
+            {!quantity
+              ? "Invalid Quantity!"
+              : canExchange
+              ? `You can Exchange ${requiredCoins} coin(s) to buy ${quantity} ticket(s)`
+              : "You don't have enough Coins!"}
+          </p>
+
+          {/* Your Coins */}
+          {user && (
+            <p className="text-yellow-200 font-medium">
+              Your Total Coins:{" "}
+              <span className="text-yellow-400 text-xl text-left font-bold inline-block">
+                {user.coins}
+              </span>
+            </p>
+          )}
+
+          {/* Required Coins */}
+          {user && (
+            <p className="text-yellow-200 font-medium">
+              Required Coins:{" "}
+              <span className="text-yellow-400 text-xl text-left font-bold inline-block">
+                {requiredCoins}
+              </span>
+            </p>
+          )}
 
           {/* Quantity Display and Action */}
           <div className="w-full flex flex-col justify-center items-center gap-y-2">
@@ -119,26 +181,12 @@ const Participate = () => {
             </div>
           </div>
 
-          {/* Currency Display */}
-          <div className="w-full mt-4">
-            <div className="w-full flex flex-row justify-between items-center gap-x-2">
-              <p className="w-1/2 text-2xl font-medium bg-secondaryDim rounded-sm flex justify-center items-center py-1">
-                100
-              </p>
-
-              <p className="w-1/2 text-2xl font-medium bg-secondaryDim rounded-sm flex justify-center items-center py-1">
-                <Euro />
-                <span>{totalAmount}</span>
-              </p>
-            </div>
-          </div>
-
           <button
-            onClick={handlePayment}
-            disabled={!quantity || quantity <= 0}
-            className="w-full text-white text-2xl font-medium bg-accent rounded-md disabled:bg-gray-500 disabled:text-primary py-1 mt-4"
+            disabled={!canExchange}
+            onClick={handleExchange}
+            className="w-full text-blue text-2xl font-medium bg-yellow-400 rounded-md py-1 mt-2 disabled:bg-gray-500 disabled:text-primary"
           >
-            Pay
+            Exchange
           </button>
         </main>
       )}
@@ -146,4 +194,4 @@ const Participate = () => {
   );
 };
 
-export default Participate;
+export default ExchangeCoin;

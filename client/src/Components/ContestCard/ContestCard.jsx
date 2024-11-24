@@ -19,7 +19,7 @@ const ContestCard = ({ contest }) => {
       {/* Contest Card */}
 
       <section
-        className={`w-full rounded-2xl duration-300 hover:shadow-sm hover:shadow-gray-400 hover:translate-x-1 hover:-translate-y-1 overflow-hidden relative flex flex-col justify-center items-center gap-y-4 pb-6 
+        className={`w-full max-w-[400px] rounded-2xl duration-300 hover:shadow-sm hover:shadow-gray-400 hover:translate-x-1 hover:-translate-y-1 overflow-hidden relative flex flex-col justify-center items-center gap-y-3 pb-6 
          ${contest.status === "upcoming" && "opacity-80"} ${
           contest.status === "finished" && "opacity-40"
         }`}
@@ -36,11 +36,16 @@ const ContestCard = ({ contest }) => {
         <p
           className={`w-full text-secondary text-xl font-semibold text-center py-1 -mb-4 ${
             contest.status === "finished" && "bg-accent"
-          } ${contest.status === "running" && "bg-transparent"}
-          ${contest.status === "upcoming" && "hidden"}`}
+          } ${contest.status === "upcoming" && "bg-accent"} ${
+            contest.status === "running" && "bg-transparent"
+          }
+          `}
         >
-          {contest.status === "running" && participated && "Participated"}
+          {contest.status === "running" && participated
+            ? "Participated"
+            : "Not Participated yet"}
           {contest.status === "finished" && "User Won"}
+          {contest.status === "upcoming" && "Coming Soon"}
         </p>
 
         {/* Image */}
@@ -53,7 +58,7 @@ const ContestCard = ({ contest }) => {
 
         {/* Timer */}
         <div
-          className={`rounded-l-xl absolute top-2 right-0 px-2 z-10 flex flex-col justify-center items-center 
+          className={`rounded-l-xl absolute top-5 right-0 px-2 z-10 flex flex-col justify-center items-center 
           ${contest.status === "running" && "bg-greenTransparent"} ${
             contest.status === "upcoming" && "bg-blueTransparent"
           } ${contest.status === "finished" && "bg-primaryTransparent px-6"}`}
@@ -86,24 +91,36 @@ const ContestCard = ({ contest }) => {
 
         {/* Entry fee */}
         {contest.status !== "finished" && (
-          <div className="text-secondary text-sm flex flex-row justify-center items-baseline gap-x-1">
-            <span className="text-yellow-400 text-2xl font-bold">
-              {currency}
-              {contest.entryFee}
-            </span>{" "}
-            Entry fee
+          <div className="flex flex-col justify-center items-center">
+            <div className="text-secondary text-base flex flex-row justify-center items-center gap-x-1">
+              1 Ticket =
+              <span className="text-yellow-400 text-xl font-bold">
+                {currency}
+                {contest.entryFee}
+              </span>{" "}
+            </div>
+
+            <p className="text-secondary text-sm font-medium">OR</p>
+
+            <div className="text-secondary text-sm flex flex-row justify-center items-center gap-x-1">
+              1 Ticket =
+              <span className="text-yellow-400 text-xl font-bold">
+                {contest?.coinEntryFee}
+              </span>{" "}
+              Coin(s)
+            </div>
           </div>
         )}
 
         {/* Button */}
         {contest.status !== "finished" && (
           <button
-            className={`text-secondary text-2xl font-semibold bg-accent rounded-xl outline-none hover:scale-105 duration-300 px-8 py-1 ${
-              participated && "border-2 border-primaryTransparent"
+            className={`text-secondary text-lg font-semibold bg-accent border-2 rounded-xl outline-none hover:scale-105 duration-300 px-4 py-1 ${
+              participated ? "border-secondary px-4" : "border-transparent"
             }`}
           >
             {participated
-              ? "Details"
+              ? "Boost Your Chance"
               : contest.status === "running"
               ? "Participate"
               : "Details"}
@@ -112,7 +129,7 @@ const ContestCard = ({ contest }) => {
 
         {/* Date Details */}
         {contest.status !== "finished" && (
-          <div className="w-11/12 text-secondary border border-white rounded-md flex flex-row flex-wrap justify-around gap-x-4 px-2 py-1 mt-4">
+          <div className="w-[95%] text-secondary border border-dashed border-white rounded-md flex flex-row flex-wrap justify-around gap-x-4 px-2 py-1 mt-4">
             <div className="mobilesm:text-xs mobile:text-base">
               Starts on:{" "}
               <span className="mobilesm:text-sm mobile:text-lg font-bold">

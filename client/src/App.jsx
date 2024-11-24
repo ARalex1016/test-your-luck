@@ -3,6 +3,7 @@ import {
   Navigate,
   createBrowserRouter,
   RouterProvider,
+  useParams,
 } from "react-router-dom";
 
 // Store
@@ -22,6 +23,7 @@ import Contest from "./Pages/Contest/Contest";
 import ContestDetails from "./Pages/Contest/ContestDetails";
 import Refferral from "./Pages/Referral/Refferral";
 import Participate from "./Pages/Participate/Participate";
+import ExchangeCoin from "./Pages/Participate/ExchangeCoin";
 import NotFound from "./Pages/NotFound";
 
 const RedirectAuthenticateUser = ({ children }) => {
@@ -39,6 +41,21 @@ const ProtectRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const ProtectedExchangeRoute = ({ children }) => {
+  const { isAuthenticated, user } = useStore();
+  const { contestId } = useParams();
+
+  if (
+    !isAuthenticated ||
+    !user ||
+    !user?.participatedContest?.includes(contestId)
+  ) {
+    return <Navigate to={`/contest/${contestId}`} replace />;
   }
 
   return children;
@@ -97,6 +114,14 @@ function App() {
           {
             path: "contest/:contestId/participate",
             element: <Participate />,
+          },
+          {
+            path: "contest/:contestId/exchange-coin",
+            element: (
+              <ProtectedExchangeRoute>
+                <ExchangeCoin />
+              </ProtectedExchangeRoute>
+            ),
           },
           {
             path: "/referral",

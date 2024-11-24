@@ -1,6 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+// Icons
+import { Equal } from "lucide-react";
+
 // Store
 import useStore from "../../Store/useStore";
 
@@ -49,7 +52,7 @@ const ContestDetails = () => {
   return (
     <>
       {contest && (
-        <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-4 pb-8">
+        <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-3 pb-8">
           {/* Timer */}
           <div
             className={`w-screen px-2 z-10 flex flex-col justify-center items-center
@@ -119,16 +122,37 @@ const ContestDetails = () => {
             </button>
           )}
 
+          <p className="text-secondaryDim">OR</p>
+
+          {/* Ticket Price in Coins Display */}
+          <div className="w-2/3 flex flex-row justify-around">
+            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+              <b>1</b> Ticket
+            </p>
+            <Equal className="text-secondaryDim" />
+            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+              <b>{contest?.coinEntryFee}</b> Coin(s)
+            </p>
+          </div>
+
           {/* Button to Exchange Coins */}
-          {participated && contest.status === "running" && (
-            <button className="w-1/2 text-xl text-primary font-medium bg-yellow-300 rounded-md py-1">
+          {participated && contest.status === "running" ? (
+            <button
+              onClick={() => navigate(`/contest/${contestId}/exchange-coin`)}
+              className="w-1/2 text-xl text-primary font-medium bg-yellow-300 rounded-md py-1"
+            >
               Exchange Coins
             </button>
+          ) : (
+            <p className="text-secondaryDim text-center text-xs">
+              <b>Note: </b> You Need to <b>Participate First</b> to be able
+              Exchange your Coins
+            </p>
           )}
 
           {/* Date Details */}
           {contest.status !== "finished" && (
-            <div className="w-full text-secondary border border-white rounded-md flex flex-row flex-wrap justify-around gap-x-4 px-2 py-1 mt-4">
+            <div className="w-full text-secondary border border-dashed border-white rounded-md flex flex-row flex-wrap justify-around gap-x-4 px-2 py-1 mt-4">
               <div className="mobilesm:text-xs mobile:text-base">
                 Starts on:{" "}
                 <span className="mobilesm:text-sm mobile:text-lg font-bold">
@@ -239,7 +263,7 @@ const ContestDetails = () => {
             )}
 
             {/* Horixontal Line */}
-            {user && <hr className="col-span-2" />}
+            {user && participated && <hr className="col-span-2" />}
 
             {/* All tickets */}
             {contest.allTickets.length > 0 && (

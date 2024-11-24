@@ -144,32 +144,43 @@ const Signup = () => {
                 value={userForm.name}
                 name="name"
                 onChange={handleInputChange}
-                className="w-[60%]"
+                className="w-[55%]"
               />
 
-              <PhoneInput
-                country={"us"}
-                placeholder="Phoner Number"
-                countryCodeEditable={false}
-                value={userForm.phoneNumber}
-                onChange={(value) =>
-                  setUserForm((pre) => ({ ...pre, phoneNumber: value }))
-                }
-                inputStyle={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "hsl(0, 0%, 100%)",
-                  outline: "none",
-                  border: "none",
-                  color: "#666666",
-                  fontWeight: "500",
-                  fontSize: "12px",
-                }}
-                containerStyle={{
-                  border: "none",
-                }}
+              <Input
+                type="text"
+                placeholder="InvitedBy"
+                readonly={true}
+                value={userForm.invitedBy}
+                name="invitedBy"
+                onChange={handleInputChange}
+                className="w-[45%]"
               />
             </div>
+
+            <PhoneInput
+              country={"us"}
+              placeholder="Phoner Number"
+              countryCodeEditable={false}
+              value={userForm.phoneNumber}
+              onChange={(value) =>
+                setUserForm((pre) => ({ ...pre, phoneNumber: value }))
+              }
+              inputStyle={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "hsl(0, 0%, 100%)",
+                outline: "none",
+                border: "none",
+                color: "#666666",
+                fontWeight: "500",
+                fontSize: "14px",
+                paddingBlock: "9px",
+              }}
+              containerStyle={{
+                border: "none",
+              }}
+            />
 
             <Input
               type="email"
@@ -192,15 +203,6 @@ const Signup = () => {
               placeholder="Confirm Password"
               value={userForm.confirmPassword}
               name="confirmPassword"
-              onChange={handleInputChange}
-            />
-
-            <Input
-              type="text"
-              placeholder="InvitedBy"
-              readonly={true}
-              value={userForm.invitedBy}
-              name="invitedBy"
               onChange={handleInputChange}
             />
 

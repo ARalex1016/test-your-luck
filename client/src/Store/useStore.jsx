@@ -78,6 +78,7 @@ const useStore = create((set) => ({
       // Error
 
       set({
+        user: null,
         error: error.response.data.message,
         isAuthenticated: false,
       });
@@ -153,6 +154,19 @@ const useStore = create((set) => ({
       const res = await axios.post(
         `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
         { amount }
+      );
+
+      return res.data.message;
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
+  },
+
+  exchangeCoin: async (coins, contestId) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
+        { coins }
       );
 
       return res.data.message;

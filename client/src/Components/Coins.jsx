@@ -4,17 +4,11 @@ import useStore from "../Store/useStore";
 const Coins = () => {
   const { user } = useStore();
 
-  const currency = "$";
-
   return (
     <>
-      {user && user.role === "players" && (
+      {user && user.role === "player" && (
         <p className="text-xl font-medium text-yellow-400 transition-all duration-300">
-          Coins:{" "}
-          <span className="font-extrabold">
-            {currency}
-            {user?.coins}
-          </span>
+          Coins: <span className="font-extrabold">{user?.coins}</span>
         </p>
       )}
     </>
