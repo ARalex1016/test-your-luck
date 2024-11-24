@@ -8,13 +8,15 @@ const Coins = () => {
 
   return (
     <>
-      <p className="text-xl font-medium text-yellow-400 transition-all duration-300">
-        Coins:{" "}
-        <span className="font-extrabold">
-          {currency}
-          {user?.coins}
-        </span>
-      </p>
+      {user && user.role === "players" && (
+        <p className="text-xl font-medium text-yellow-400 transition-all duration-300">
+          Coins:{" "}
+          <span className="font-extrabold">
+            {currency}
+            {user?.coins}
+          </span>
+        </p>
+      )}
     </>
   );
 };
