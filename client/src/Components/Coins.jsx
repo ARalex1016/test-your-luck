@@ -5,7 +5,6 @@ const Coins = () => {
   const { user } = useStore();
 
   const currency = "$";
-  const value = 100;
 
   return (
     <>
@@ -13,7 +12,7 @@ const Coins = () => {
         Coins:{" "}
         <span className="font-extrabold">
           {currency}
-          {user.coins}
+          {user?.coins}
         </span>
       </p>
     </>
