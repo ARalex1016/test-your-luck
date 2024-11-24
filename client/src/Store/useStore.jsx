@@ -31,6 +31,7 @@ const useStore = create((set) => ({
 
       //   Success
       set({ user: res.data.data, isAuthenticated: true, error: null });
+      return res.data.message;
     } catch (error) {
       // Error
       set({
@@ -38,7 +39,7 @@ const useStore = create((set) => ({
         isAuthenticated: false,
       });
 
-      throw Error;
+      throw Error(error.response.data.message);
     } finally {
       set({ isLoading: false });
     }
@@ -151,7 +152,8 @@ const useStore = create((set) => ({
     try {
       const res = await axios.post(
         `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
-        amount
+        { amount },
+        { withCredentials: true }
       );
 
       return res.data.data;

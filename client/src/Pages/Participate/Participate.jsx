@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -58,12 +59,9 @@ const Participate = () => {
   const handlePayment = async () => {
     try {
       const res = await participateContest(totalAmount, contestId);
-
-      console.log(res);
-      alert(res);
+      toast.success(res);
     } catch (error) {
-      console.log(error);
-      alert(error);
+      toast.error(error.message);
     }
   };
 

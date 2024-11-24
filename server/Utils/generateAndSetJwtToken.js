@@ -13,7 +13,7 @@ export const generateAndSetJwtToken = (user, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     // sameSite: process.env.NODE_ENV === "production" ? "lax" : "strict",
-    sameSite: "None",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   });
 

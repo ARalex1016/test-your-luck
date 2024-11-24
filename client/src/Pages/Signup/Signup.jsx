@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import toast from "react-hot-toast";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -93,10 +94,13 @@ const Signup = () => {
 
     try {
       // Server Response
-      await signup(userForm);
+      const res = await signup(userForm);
 
+      toast.success(res.data.message);
       navigate("/dashboard");
-    } catch (error) {}
+    } catch (error) {
+      setMessage(error.message);
+    }
   };
 
   return (

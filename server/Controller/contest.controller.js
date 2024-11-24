@@ -263,13 +263,11 @@ export const participateContest = async (req, res) => {
 
     contest.participantTickets.push(...tickets.map((ticket) => ticket._id));
     await contest.save();
-
     // Push in User participated List
     if (!user.participatedContest.includes(contest._id)) {
       user.participatedContest.push(contest._id);
       await user.save();
     }
-
     // Reward Inviter for First Payment
     if (!user.firstPaid) {
       if (user.invitedBy) {
@@ -281,7 +279,6 @@ export const participateContest = async (req, res) => {
         await user.save();
       }
     }
-
     // Success
     res.status(200).json({
       status: "success",
@@ -292,7 +289,7 @@ export const participateContest = async (req, res) => {
     // Error
     res.status(500).json({
       status: "fail",
-      message: error.message || "Internal server error!",
+      message: "Internal server error!",
     });
   }
 };
