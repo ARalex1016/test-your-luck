@@ -66,6 +66,9 @@ const Participate = () => {
     try {
       const res = await participateContest(totalAmount, contestId);
       toast.success(res);
+
+      if (!user.participatedContest.includes(contestId)) {
+      }
     } catch (error) {
       toast.error(error.message);
     }

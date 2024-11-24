@@ -165,7 +165,7 @@ const useStore = create((set) => ({
   exchangeCoin: async (coins, contestId) => {
     try {
       const res = await axios.post(
-        `${API_URL}${CONTEST_ROUTE}${contestId}/participate`,
+        `${API_URL}${CONTEST_ROUTE}${contestId}/exchange-coin`,
         { coins }
       );
 

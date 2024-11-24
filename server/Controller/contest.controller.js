@@ -240,6 +240,13 @@ export const participateContest = async (req, res) => {
   const { user, contest } = req;
   const { amount } = req.body;
 
+  if (!amount) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Invalid Amount!",
+    });
+  }
+
   if (amount < contest.entryFee) {
     return res.status(400).json({
       status: "fail",
