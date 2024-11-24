@@ -12,7 +12,8 @@ import { Equal } from "lucide-react";
 
 const ExchangeCoin = () => {
   const { contestId } = useParams();
-  const { user, isAuthenticated, getContest, exchangeCoin } = useStore();
+  const { user, isAuthenticated, getContest, exchangeCoin, checkAuth } =
+    useStore();
 
   const [contest, setContest] = useState(null);
   const [requiredCoins, setRequiredCoins] = useState(0);
@@ -81,6 +82,8 @@ const ExchangeCoin = () => {
 
     try {
       const res = await exchangeCoin(requiredCoins, contestId);
+      await checkAuth();
+
       toast.success(res);
     } catch (error) {
       toast.error(error.message);

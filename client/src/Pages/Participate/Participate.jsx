@@ -12,7 +12,8 @@ import { Euro } from "lucide-react";
 
 const Participate = () => {
   const { contestId } = useParams();
-  const { isAuthenticated, getContest, participateContest } = useStore();
+  const { isAuthenticated, getContest, participateContest, checkAuth } =
+    useStore();
 
   const [contest, setContest] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -65,10 +66,12 @@ const Participate = () => {
 
     try {
       const res = await participateContest(totalAmount, contestId);
-      toast.success(res);
 
       if (!user.participatedContest.includes(contestId)) {
+        await checkAuth();
       }
+
+      toast.success(res);
     } catch (error) {
       toast.error(error.message);
     }
