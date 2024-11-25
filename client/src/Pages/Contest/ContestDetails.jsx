@@ -126,11 +126,11 @@ const ContestDetails = () => {
 
           {/* Ticket Price in Coins Display */}
           <div className="w-2/3 flex flex-row justify-around">
-            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+            <p className="w-2/5 text-base text-center bg-secondaryDim rounded-sm">
               <b>1</b> Ticket
             </p>
             <Equal className="text-secondaryDim" />
-            <p className="w-2/5 text-lg text-center bg-secondaryDim rounded-sm">
+            <p className="w-2/5 text-base text-center bg-secondaryDim rounded-sm">
               <b>{contest?.coinEntryFee}</b> Coin(s)
             </p>
           </div>
