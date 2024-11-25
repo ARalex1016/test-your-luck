@@ -173,18 +173,17 @@ const Header = () => {
                 </NavLink>
 
                 {/* Referral */}
-                {isAuthenticated && (
-                  <NavLink
-                    to="/referral"
-                    className={({ isActive }) =>
-                      `text-xl font-medium  hover:text-accent transition-all duration-300 ${
-                        isActive ? "text-accent" : "text-secondary"
-                      }`
-                    }
-                  >
-                    <li>Referral</li>
-                  </NavLink>
-                )}
+
+                <NavLink
+                  to="/referral"
+                  className={({ isActive }) =>
+                    `text-xl font-medium  hover:text-accent transition-all duration-300 ${
+                      isActive ? "text-accent" : "text-secondary"
+                    }`
+                  }
+                >
+                  <li>Referral</li>
+                </NavLink>
 
                 {/* Profile */}
                 {isAuthenticated && (

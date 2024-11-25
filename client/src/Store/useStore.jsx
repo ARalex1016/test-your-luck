@@ -113,6 +113,10 @@ const useStore = create((set) => ({
     try {
       const res = await axios.post(`${API_URL}${AUTH_ROUTE}logout`);
 
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        localStorage.clear("authToken");
+      }
+
       //   Success
       set({ user: res.data.data, isAuthenticated: false, error: null });
     } catch (error) {
@@ -188,6 +192,16 @@ const useStore = create((set) => ({
       );
 
       return res.data;
+    } catch (error) {
+      throw Error(error.response.data.message);
+    }
+  },
+
+  getReferrals: async () => {
+    try {
+      const res = await axios.get(`${API_URL}${USER_ROUTE}getReferrals`);
+
+      return res.data.data;
     } catch (error) {
       throw Error(error.response.data.message);
     }

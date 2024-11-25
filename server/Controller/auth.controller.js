@@ -8,6 +8,7 @@ import User from "./../Model/User.model.js";
 // Utils
 import { validatePassword } from "../Utils/StringManager.js";
 import { generateAndSetJwtToken } from "../Utils/generateAndSetJwtToken.js";
+import { log } from "console";
 
 export const signup = async (req, res) => {
   const { name, email, phoneNumber, password, confirmPassword, invitedBy } =
@@ -143,6 +144,12 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+    if (process.env.NODE_ENV === "development") {
+      if (req.headers.authorization) {
+        delete req.headers.authorization;
+      }
+    }
+
     res.cookie("jwt", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -196,6 +203,7 @@ export const protect = async (req, res, next) => {
     next();
   } catch (error) {
     // Error
+
     res.status(500).json({
       status: "fail",
       message: error.message || "Internal server error!",

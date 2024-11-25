@@ -1,8 +1,35 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 // Store
 import useStore from "../../Store/useStore";
 
+// Utils
+import { formatDate } from "../../Utils/dateManager";
+
+// Icons
+import { FaCheckCircle } from "react-icons/fa";
+import { MdAccessTimeFilled } from "react-icons/md";
+
 const Refferral = () => {
-  const { user } = useStore();
+  const { isAuthenticated, getReferrals } = useStore();
+  const navigate = useNavigate();
+
+  const [referrals, setReferrals] = useState([]);
+
+  useEffect(() => {
+    const fetchReferrals = async () => {
+      try {
+        const res = await getReferrals();
+
+        setReferrals(res);
+      } catch (error) {}
+    };
+
+    if (isAuthenticated) {
+      fetchReferrals();
+    }
+  }, [getReferrals]);
 
   return (
     <>
@@ -25,20 +52,21 @@ const Refferral = () => {
             </button>
           </div>
 
+          {/* Referral Rules */}
           <div>
             <p className="text-yellow-400 text-left text-xl font-medium">
               Referral Bonus / Share & Earn
             </p>
 
             <ul className="text-white text-sm">
-              <li>
+              <li className="before:content-['⭐'] before:mr-2">
                 <b>Copy & Share the Link </b>to your friends
               </li>
-              <li>
+              <li className="before:content-['⭐'] before:mr-2">
                 You'll get <b>20 coins</b> for each Friends that <b>Register</b>{" "}
                 and <b>Participate</b> in any 1 Contest (atleast)
               </li>
-              <li>
+              <li className="before:content-['⭐'] before:mr-2">
                 You can <b>Exchange</b> the coins to buy <b>Tickets</b> of any
                 Ongoing Contests (that you have participated)
               </li>
@@ -47,33 +75,78 @@ const Refferral = () => {
         </section>
 
         {/* Referral Table */}
-        <div className="w-full">
-          <h2 className="text-yellow-400 text-left text-2xl font-medium">
-            All Your Referrals
-          </h2>
+        {isAuthenticated ? (
+          <div className="w-full">
+            <h2 className="text-yellow-400 text-left text-2xl font-medium">
+              All Your Referrals
+            </h2>
 
-          <table className="w-full text-white bg-gray rounded-md">
-            <thead className="h-8 text-accent text-base border-b-2">
-              <tr>
-                <th className="w-1/12">S.N</th>
-                <th className="w-4/12">Referrals</th>
-                <th className="w-4/12 text-sm break-words">
-                  Date Of Registration
-                </th>
-                <th className="w-3">Status</th>
-              </tr>
-            </thead>
+            <table className="w-full text-white bg-gray rounded-md">
+              <thead className="text-accent text-base border-b-2">
+                <tr className="h-8">
+                  <th className="w-1/12">S.N</th>
+                  <th className="w-4/12">Referrals</th>
+                  <th className="w-4/12 text-sm break-words">
+                    Date Of Registration
+                  </th>
+                  <th className="w-3">Status</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              <tr>
-                <td className="text-center">1</td>
-                <td className="text-center">Aslam</td>
-                <td className="text-center">2024-10-02</td>
-                <td className="text-center">Pending</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <tbody>
+                {referrals && referrals.length > 0 ? (
+                  referrals.map((referral, index) => {
+                    return (
+                      <tr key={index} className="h-7 text-sm">
+                        <td className="text-center">{index + 1}</td>
+
+                        <td className="text-center">{referral.email}</td>
+
+                        <td className="text-center">
+                          {formatDate(referral.createdAt)}
+                        </td>
+
+                        <td className="text-center relative group">
+                          {referral.firstPaid ? (
+                            <div>
+                              <FaCheckCircle className="text-green text-lg m-auto" />
+                              <span className="absolute hidden z-20 group-hover:block bg-primary text-green text-xs rounded shadow-sm shadow-secondaryDim px-2 py-1">
+                                This referral has made their first payment.
+                              </span>
+                            </div>
+                          ) : (
+                            <div>
+                              <MdAccessTimeFilled className="text-red-500 text-lg m-auto" />
+                              <span className="absolute hidden z-20 group-hover:block bg-primary text-red-500 text-xs rounded shadow-sm shadow-secondaryDim px-2 py-1">
+                                This referral has not paid yet.
+                              </span>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="h-7 text-secondaryDim text-center"
+                    >
+                      You don't have any Referrals yet
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-red-500 font-medium text-center text-lg">
+            <b onClick={() => navigate("/signup")} className="underline">
+              Register
+            </b>{" "}
+            and Share Link to get Referral Bonus
+          </p>
+        )}
       </main>
     </>
   );
