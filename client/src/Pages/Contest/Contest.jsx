@@ -20,7 +20,7 @@ const Contest = () => {
 
   return (
     <>
-      <main className="w-full mt-menuHeight px-paddingX pb-10">
+      <main className="w-full mt-menuHeight px-paddingX pb-10 overflow-y-auto">
         {/* Running Contest */}
         <h2 className="text-xl text-white font-bold mb-4">Running Contest</h2>
 

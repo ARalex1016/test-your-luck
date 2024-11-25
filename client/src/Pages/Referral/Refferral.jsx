@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -12,10 +13,11 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdAccessTimeFilled } from "react-icons/md";
 
 const Refferral = () => {
-  const { isAuthenticated, getReferrals } = useStore();
+  const { user, isAuthenticated, getReferrals } = useStore();
   const navigate = useNavigate();
 
   const [referrals, setReferrals] = useState([]);
+  const [referralUrl, setReferralUrl] = useState(null);
 
   useEffect(() => {
     const fetchReferrals = async () => {
@@ -31,6 +33,22 @@ const Refferral = () => {
     }
   }, [getReferrals]);
 
+  useEffect(() => {
+    const rootUrl = `${window.location.protocol}//${window.location.host}`;
+
+    const userId = `${isAuthenticated ? "?referral=" + user._id : ""}`;
+
+    setReferralUrl(`${rootUrl}/${userId}`);
+  }, [isAuthenticated]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralUrl);
+
+      toast.success("Link Copied Successfully!");
+    } catch (error) {}
+  };
+
   return (
     <>
       <main className="w-full mt-menuHeight px-paddingX flex flex-col gap-y-6 justify-center items-center">
@@ -44,10 +62,15 @@ const Refferral = () => {
           <div className="w-full bg-white rounded-t-lg overflow-hidden">
             <input
               type="text"
+              value={referralUrl}
               readOnly
-              className="w-full text-base test-center rounded p-2 outline-none"
+              onCopy={(e) => e.preventDefault()}
+              className="w-full text-base font-medium text-center rounded px-4 py-2 outline-none notSelectable"
             />
-            <button className="w-full text-primaryLight text-lg font-medium text-center border-2 border-gray-400">
+            <button
+              onClick={handleCopy}
+              className="w-full text-secondaryDim text-lg font-medium text-center bg-blueTransparent border-2 border-transparent active:border-secondary active:scale-x-[.99]"
+            >
               Click here to Copy
             </button>
           </div>
@@ -95,7 +118,7 @@ const Refferral = () => {
 
               <tbody>
                 {referrals && referrals.length > 0 ? (
-                  referrals.map((referral, index) => {
+                  referrals?.map((referral, index) => {
                     return (
                       <tr key={index} className="h-7 text-sm">
                         <td className="text-center">{index + 1}</td>

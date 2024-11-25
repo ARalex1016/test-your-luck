@@ -8,7 +8,7 @@ import Timer from "../Timer";
 import { formatDate } from "../../Utils/dateManager";
 
 const ContestCard = ({ contest }) => {
-  const { user } = useStore();
+  const { user, isAuthenticated } = useStore();
 
   const currency = import.meta.env.VITE_SERVER_CURRENCY;
 
@@ -41,11 +41,13 @@ const ContestCard = ({ contest }) => {
           }
           `}
         >
-          {contest.status === "running" && participated
-            ? "Participated"
-            : "Not Participated yet"}
-          {contest.status === "finished" && "User Won"}
-          {contest.status === "upcoming" && "Coming Soon"}
+          {!isAuthenticated && "Sign up to Participate"}
+          {isAuthenticated &&
+            (contest.status === "running" && participated
+              ? "Participated"
+              : "Not Participated yet")}
+          {isAuthenticated && contest.status === "finished" && "User Won"}
+          {isAuthenticated && contest.status === "upcoming" && "Coming Soon"}
         </p>
 
         {/* Image */}

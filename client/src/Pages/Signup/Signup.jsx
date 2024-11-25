@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 // Store
 import useStore from "../../Store/useStore";
@@ -20,7 +21,7 @@ const Signup = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    invitedBy: undefined,
+    invitedBy: localStorage.getItem("referralLink") || undefined,
   };
 
   const [userForm, setUserForm] = useState(initialUser);
@@ -98,6 +99,8 @@ const Signup = () => {
 
       toast.success(res.data.message);
       navigate("/dashboard");
+
+      localStorage.removeItem("referralLink");
     } catch (error) {
       setMessage(error.message);
     }
@@ -112,7 +115,28 @@ const Signup = () => {
         }}
       >
         {/* Label for Valid Information */}
-        <div className="w-screen bg-yellow-400 absolute top-menuHeight z-10">
+        <motion.div
+          variants={{
+            initial: {
+              top: 0,
+              scale: 0,
+              opacity: 0,
+            },
+            final: {
+              top: "var(--menuHeight)",
+              scale: 1,
+              opacity: 1,
+            },
+          }}
+          initial="initial"
+          animate="final"
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+          }}
+          className="w-screen bg-yellow-500 absolute z-10"
+        >
           <p className="text-primary text-sm text-center">
             <b>Note:</b> Please give valid informaton
           </p>
@@ -120,7 +144,7 @@ const Signup = () => {
             These information will help us to <b>Contact</b> you on your{" "}
             <b>Winnings</b>
           </p>
-        </div>
+        </motion.div>
 
         {/* Container */}
         <div className="w-full bg-primaryLight rounded-2xl flex flex-col items-center py-3 gap-y-1">
@@ -154,7 +178,7 @@ const Signup = () => {
                 value={userForm.invitedBy}
                 name="invitedBy"
                 onChange={handleInputChange}
-                className="w-[45%]"
+                className="w-[45%] notSelectable"
               />
             </div>
 
