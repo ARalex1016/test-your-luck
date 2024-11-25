@@ -13,9 +13,6 @@ const USER_ROUTE = import.meta.env.VITE_SERVER_USER_ROUTE;
 const CONTEST_ROUTE = import.meta.env.VITE_SERVER_CONTEST_ROUTE;
 const TICKET_ROUTE = import.meta.env.VITE_SERVER_TICKET_ROUTE;
 
-console.log(AUTH_ROUTE);
-console.log(USER_ROUTE);
-
 axios.defaults.withCredentials = true;
 if (import.meta.env.VITE_NODE_ENV === "development") {
   let token = localStorage.getItem("authToken");
