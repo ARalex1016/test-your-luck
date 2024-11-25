@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
 
-console.log(import.meta.env.VITE_NODE_ENV);
-
 // Urls
 const API_URL =
   import.meta.env.VITE_NODE_ENV === "production"
@@ -10,11 +8,24 @@ const API_URL =
     : import.meta.env.VITE_SERVER_URL_DEVELOPMENT;
 
 // Routes
-const USER_ROUTE = import.meta.env.VITE_SERVER_USER_ROUTE;
+const AUTH_ROUTE = import.meta.env.VITE_SERVER_AUTH_ROUTE;
 const CONTEST_ROUTE = import.meta.env.VITE_SERVER_CONTEST_ROUTE;
 const TICKET_ROUTE = import.meta.env.VITE_SERVER_TICKET_ROUTE;
 
 axios.defaults.withCredentials = true;
+if (import.meta.env.VITE_NODE_ENV === "development") {
+  let token = localStorage.getItem("authToken");
+
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
+const setTokenInDev = (token) => {
+  if (import.meta.env.VITE_NODE_ENV === "development") {
+    localStorage.setItem("authToken", token);
+    return;
+  }
+  return;
+};
 
 // Store
 const useStore = create((set) => ({
@@ -29,7 +40,9 @@ const useStore = create((set) => ({
     set({ isLoading: true });
 
     try {
-      const res = await axios.post(`${API_URL}${USER_ROUTE}signup`, userData);
+      const res = await axios.post(`${API_URL}${AUTH_ROUTE}signup`, userData);
+
+      setTokenInDev(res.data.token);
 
       //   Success
       set({ user: res.data.data, isAuthenticated: true, error: null });
@@ -51,7 +64,9 @@ const useStore = create((set) => ({
     set({ isLoading: true });
 
     try {
-      const res = await axios.post(`${API_URL}${USER_ROUTE}login`, userData);
+      const res = await axios.post(`${API_URL}${AUTH_ROUTE}login`, userData);
+
+      setTokenInDev(res.data.token);
 
       //   Success
       set({ user: res.data.data, isAuthenticated: true, error: null });
@@ -72,7 +87,7 @@ const useStore = create((set) => ({
     set({ isCheckingAuth: true });
 
     try {
-      const res = await axios.post(`${API_URL}${USER_ROUTE}check-auth`);
+      const res = await axios.post(`${API_URL}${AUTH_ROUTE}check-auth`);
 
       //   Success
       set({ user: res.data.data, isAuthenticated: true, error: null });
@@ -95,7 +110,7 @@ const useStore = create((set) => ({
     set({ isLoading: true });
 
     try {
-      const res = await axios.post(`${API_URL}${USER_ROUTE}logout`);
+      const res = await axios.post(`${API_URL}${AUTH_ROUTE}logout`);
 
       //   Success
       set({ user: res.data.data, isAuthenticated: false, error: null });
@@ -158,7 +173,7 @@ const useStore = create((set) => ({
         { amount }
       );
 
-      return res.data.message;
+      return res.data;
     } catch (error) {
       throw Error(error.response.data.message);
     }
@@ -171,7 +186,7 @@ const useStore = create((set) => ({
         { coins }
       );
 
-      return res.data.message;
+      return res.data;
     } catch (error) {
       throw Error(error.response.data.message);
     }

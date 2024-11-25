@@ -22,7 +22,7 @@ const Client_Url =
 
 app.use(cors({ origin: Client_Url, credentials: true }));
 
-app.use("/api/v1/user/", authRouter);
+app.use("/api/v1/auth/", authRouter);
 app.use("/api/v1/contest/", contestRouter);
 app.use("/api/v1/ticket/", ticketRouter);
 

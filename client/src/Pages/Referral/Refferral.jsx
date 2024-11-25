@@ -52,12 +52,15 @@ const Refferral = () => {
             All Your Referrals
           </h2>
 
-          <table className="w-full text-white border">
-            <thead className="text-accent text-xl border-b-2">
+          <table className="w-full text-white bg-gray rounded-md">
+            <thead className="h-8 text-accent text-base border-b-2">
               <tr>
-                <th>S.N</th>
-                <th>Referrals</th>
-                <th>Status</th>
+                <th className="w-1/12">S.N</th>
+                <th className="w-4/12">Referrals</th>
+                <th className="w-4/12 text-sm break-words">
+                  Date Of Registration
+                </th>
+                <th className="w-3">Status</th>
               </tr>
             </thead>
 
@@ -65,6 +68,7 @@ const Refferral = () => {
               <tr>
                 <td className="text-center">1</td>
                 <td className="text-center">Aslam</td>
+                <td className="text-center">2024-10-02</td>
                 <td className="text-center">Pending</td>
               </tr>
             </tbody>

@@ -83,6 +83,7 @@ export const signup = async (req, res) => {
       status: "success",
       message: "User created successful",
       data: { ...user._doc, password: undefined },
+      token: process.env.NODE_ENV === "development" ? token : undefined,
     });
   } catch (error) {
     // Error
@@ -129,6 +130,7 @@ export const login = async (req, res) => {
       status: "success",
       message: "Logged in successful!",
       data: user,
+      token: process.env.NODE_ENV === "development" ? token : undefined,
     });
   } catch (error) {
     // Error
@@ -160,7 +162,13 @@ export const logout = async (req, res) => {
 };
 
 export const protect = async (req, res, next) => {
-  const token = req.cookies.jwt;
+  let token;
+  if (process.env.NODE_ENV === "development") {
+    // token = req.cookies.jwt;
+    token = req.headers.authorization?.split(" ")[1];
+  } else if (process.env.NODE_ENV === "production") {
+    token = req.cookies.jwt;
+  }
 
   if (!token) {
     return res.status(401).json({
@@ -198,6 +206,7 @@ export const protect = async (req, res, next) => {
 export const checkAuth = (req, res) => {
   res.status(200).json({
     status: "success",
+    data: req.user,
   });
 };
 

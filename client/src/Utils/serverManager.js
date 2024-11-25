@@ -7,7 +7,7 @@
 //     : import.meta.env.VITE_SERVER_URL_DEVELOPMENT;
 
 // // Routes
-// const USER_ROUTE = import.meta.env.VITE_SERVER_USER_ROUTE;
+// const AUTH_ROUTE = import.meta.env.VITE_SERVER_AUTH_ROUTE;
 // const CONTEST_ROUTE = import.meta.env.VITE_SERVER_CONTEST_ROUTE;
 
 // axios.defaults.withCredentials = true;

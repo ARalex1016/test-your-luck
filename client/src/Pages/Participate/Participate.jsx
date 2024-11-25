@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
+// Components
+import RevealTicketOnAnimation from "../../Components/RevealTicketOnAnimation";
+
 // Store
 import useStore from "../../Store/useStore";
 
@@ -12,12 +15,14 @@ import { Euro } from "lucide-react";
 
 const Participate = () => {
   const { contestId } = useParams();
-  const { isAuthenticated, getContest, participateContest, checkAuth } =
+  const { user, isAuthenticated, getContest, participateContest, checkAuth } =
     useStore();
 
   const [contest, setContest] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [totalAmount, setTotalAmount] = useState(null);
+  const [newTickets, setNewTickets] = useState([]);
+  const [openPopUp, setOpenPopUp] = useState(false);
 
   useEffect(() => {
     const fetchContest = async (contestId) => {
@@ -67,11 +72,14 @@ const Participate = () => {
     try {
       const res = await participateContest(totalAmount, contestId);
 
-      if (!user.participatedContest.includes(contestId)) {
+      toast.success(res.message);
+
+      setNewTickets(res.data);
+      setOpenPopUp(true);
+
+      if (!user?.participatedContest.includes(contestId)) {
         await checkAuth();
       }
-
-      toast.success(res);
     } catch (error) {
       toast.error(error.message);
     }
@@ -79,6 +87,12 @@ const Participate = () => {
 
   return (
     <>
+      <RevealTicketOnAnimation
+        openPopUp={openPopUp}
+        setOpenPopUp={setOpenPopUp}
+        newTickets={newTickets}
+      />
+
       {contest && (
         <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-2 pb-8">
           {/* Image */}

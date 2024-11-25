@@ -10,6 +10,9 @@ import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
 import { Equal } from "lucide-react";
 
+// Components
+import RevealTicketOnAnimation from "../../Components/RevealTicketOnAnimation";
+
 const ExchangeCoin = () => {
   const { contestId } = useParams();
   const { user, isAuthenticated, getContest, exchangeCoin, checkAuth } =
@@ -19,6 +22,8 @@ const ExchangeCoin = () => {
   const [requiredCoins, setRequiredCoins] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [canExchange, setCanExchange] = useState(false);
+  const [newTickets, setNewTickets] = useState([]);
+  const [openPopUp, setOpenPopUp] = useState(false);
 
   useEffect(() => {
     const fetchContest = async (contestId) => {
@@ -82,9 +87,13 @@ const ExchangeCoin = () => {
 
     try {
       const res = await exchangeCoin(requiredCoins, contestId);
-      await checkAuth();
 
-      toast.success(res);
+      toast.success(res.message);
+
+      setNewTickets(res.data);
+      setOpenPopUp(true);
+
+      await checkAuth();
     } catch (error) {
       toast.error(error.message);
     }
@@ -92,6 +101,12 @@ const ExchangeCoin = () => {
 
   return (
     <>
+      <RevealTicketOnAnimation
+        openPopUp={openPopUp}
+        setOpenPopUp={setOpenPopUp}
+        newTickets={newTickets}
+      />
+
       {contest && (
         <main className="mt-menuHeight px-paddingX flex flex-col justify-center items-center gap-y-3 pb-8">
           {/* Image */}

@@ -239,7 +239,6 @@ export const getTicketById = async (req, res) => {
 export const participateContest = async (req, res) => {
   const { user, contest } = req;
   const { amount } = req.body;
-  console.log(1);
 
   if (!amount) {
     return res.status(400).json({
@@ -276,6 +275,7 @@ export const participateContest = async (req, res) => {
       user.participatedContest.push(contest._id);
       await user.save();
     }
+
     // Reward Inviter for First Payment
     if (!user.firstPaid) {
       if (user.invitedBy) {
@@ -287,14 +287,18 @@ export const participateContest = async (req, res) => {
         await user.save();
       }
     }
+
     // Success
     res.status(200).json({
       status: "success",
-      message: `Successfully Participated in the contest with ${tickets.length} ticket(s).`,
+      message: user.participatedContest.includes(contest._id)
+        ? `Successfully bought ${tickets.length} ticket(s)`
+        : `Successfully Participated in the contest with ${tickets.length} ticket(s).`,
       data: tickets,
     });
   } catch (error) {
     // Error
+    console.log("error");
     res.status(500).json({
       status: "fail",
       message: "Internal server error!",

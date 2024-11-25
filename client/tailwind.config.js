@@ -7,6 +7,7 @@ export default {
         primary: "hsl(216, 14%, 7%)",
         primaryLight: "hsl(0, 0%, 14%)",
         primaryTransparent: "hsl(216, 14%, 7%,.7)",
+        gray: "hsl(0, 0%, 12%)",
         secondary: "hsl(0, 0%, 100%)",
         secondaryDim: "hsl(0, 0%, 100%, .9)",
         accent: "hsl(210, 100%, 41%)",
